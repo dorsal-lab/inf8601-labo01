@@ -22,7 +22,7 @@ add_custom_target(format
 )
 
 add_custom_target(remise
-    COMMAND zip --must-match -r ${CMAKE_CURRENT_BINARY_DIR}/remise.zip
+    COMMAND tar -zcvf remise.tar.gz source/pipeline-pthread.c source/pipeline-tbb.cpp
             source/*.c source/*.cpp include/*.h CMakeLists.txt data/*.sh .clang-format README.pdf
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
 )

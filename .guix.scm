@@ -8,6 +8,6 @@
   "gcc-toolchain"
   "libpng"
   "make"
-  "tbb@2020.3"
-  "wget"
-  "zip"))
+  "tar"
+  "tbb"
+  "wget"))
