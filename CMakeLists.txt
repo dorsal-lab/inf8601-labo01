@@ -23,7 +23,6 @@ add_custom_target(format
 
 add_custom_target(remise
     COMMAND tar -zcvf remise.tar.gz source/pipeline-pthread.c source/pipeline-tbb.cpp
-            source/*.c source/*.cpp include/*.h CMakeLists.txt data/*.sh .clang-format README.pdf
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
 )
 add_dependencies(remise pipeline)
