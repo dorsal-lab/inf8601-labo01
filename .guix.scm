@@ -6,6 +6,7 @@
   "coreutils"
   "findutils"
   "gcc-toolchain"
+  "gzip"
   "libpng"
   "make"
   "tar"
