@@ -10,6 +10,5 @@
   "libpng"
   "make"
   "tar"
-  "tbb"
-  "wget"
-  "zlib"))
+  "tbb@2020"
+  "wget"))
