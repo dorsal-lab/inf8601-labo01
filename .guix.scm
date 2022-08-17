@@ -11,4 +11,5 @@
   "make"
   "tar"
   "tbb"
-  "wget"))
+  "wget"
+  "zlib"))

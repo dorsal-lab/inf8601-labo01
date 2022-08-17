@@ -4,7 +4,7 @@ project(tp1 LANGUAGES C CXX)
 
 include_directories(pipeline include)
 add_executable(pipeline)
-target_link_libraries(pipeline -lm -pthread -lpng -ltbb)
+target_link_libraries(pipeline -lm -pthread -lpng -lz -ltbb)
 target_sources(pipeline PUBLIC
     source/filter.c
     source/image.c
