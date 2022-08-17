@@ -25,7 +25,6 @@ add_custom_target(remise
     COMMAND tar -zcvf remise.tar.gz source/pipeline-pthread.c source/pipeline-tbb.cpp
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
 )
-add_dependencies(remise pipeline)
 
 add_custom_target(run-serial
     COMMAND time ${CMAKE_CURRENT_BINARY_DIR}/pipeline --directory ${PROJECT_SOURCE_DIR}/data --pipeline serial
