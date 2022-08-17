@@ -14,6 +14,8 @@ target_sources(pipeline PUBLIC
     source/pipeline-tbb.cpp
     source/queue.c
 )
+# For macros with __FILE__
+target_compile_options(pipeline PUBLIC "-ffile-prefix-map=${CMAKE_SOURCE_DIR}/=")
 
 add_custom_target(format
     COMMAND clang-format -i `find source -type f -iname '*.c'` `find include -type f -iname '*.h'`
