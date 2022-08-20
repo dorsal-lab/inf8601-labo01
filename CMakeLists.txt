@@ -15,7 +15,7 @@ target_sources(pipeline PUBLIC
     source/queue.c
 )
 # For macros with __FILE__
-target_compile_options(pipeline PUBLIC "-ffile-prefix-map=${CMAKE_SOURCE_DIR}/=")
+target_compile_options(pipeline PUBLIC "-fmacro-prefix-map=${CMAKE_SOURCE_DIR}/=")
 
 add_custom_target(format
     COMMAND clang-format -i `find source -type f -iname '*.c'` `find include -type f -iname '*.h'`
@@ -51,9 +51,15 @@ add_custom_target(run-all
 )
 add_dependencies(run-all run-serial run-pthread run-tbb)
 
+add_custom_target(generate-check
+    COMMAND ./data/generate-random ./data/0000.png
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+)
+
 add_custom_target(check
     COMMAND ./data/check.sh
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
 )
+add_dependencies(check generate-check run-pthread run-tbb run-serial)
 
 install(TARGETS pipeline)

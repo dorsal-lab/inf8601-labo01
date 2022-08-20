@@ -108,13 +108,13 @@ int main(int argc, char* argv[]) {
     int ret;
     if (use_pipeline_serial) {
         image_dir.save_prefix = "serial";
-        ret                   = pipeline_serial(&image_dir);
+        pipeline_serial(&image_dir);
     } else if (use_pipeline_pthread) {
         image_dir.save_prefix = "pthread";
-        ret                   = pipeline_pthread(&image_dir);
+        pipeline_pthread(&image_dir);
     } else if (use_pipeline_tbb) {
         image_dir.save_prefix = "tbb";
-        ret                   = pipeline_tbb(&image_dir);
+        pipeline_tbb(&image_dir);
     } else {
         LOG_ERROR("no pipeline configured");
         exit(1);
