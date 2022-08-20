@@ -57,10 +57,10 @@ add_custom_target(generate-check
 )
 
 add_custom_target(check
-    COMMAND ./data/check.sh
     COMMAND ${CMAKE_CURRENT_BINARY_DIR}/pipeline --directory ${PROJECT_SOURCE_DIR}/data --pipeline pthread
     COMMAND ${CMAKE_CURRENT_BINARY_DIR}/pipeline --directory ${PROJECT_SOURCE_DIR}/data --pipeline tbb
     COMMAND ${CMAKE_CURRENT_BINARY_DIR}/pipeline --directory ${PROJECT_SOURCE_DIR}/data --pipeline serial
+    COMMAND ./data/check.sh
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
 )
 add_dependencies(check generate-check)
