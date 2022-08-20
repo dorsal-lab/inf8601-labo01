@@ -49,6 +49,21 @@ static void sigint_handler(int sig) {
     image_dir.stop = true;
 }
 
+__attribute__((weak))
+int pipeline_serial(image_dir_t* image_dir) {
+	return -1;
+}
+
+__attribute__((weak))
+int pipeline_pthread(image_dir_t *image_dir) {
+	return -1;
+}
+
+__attribute__((weak))
+int pipeline_tbb(image_dir_t *image_dir) {
+	return -1;
+}
+
 int main(int argc, char* argv[]) {
     char* exec_name           = argv[0];
     bool use_pipeline_serial  = false;
