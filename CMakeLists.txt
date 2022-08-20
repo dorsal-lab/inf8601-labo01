@@ -78,4 +78,4 @@ add_custom_target(check
 )
 add_dependencies(check generate-check)
 
-install(TARGETS pipeline)
+install(TARGETS pipeline pipeline-notbb)
