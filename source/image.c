@@ -303,7 +303,7 @@ image_t* image_dir_load_next(image_dir_t* image_dir) {
         goto stop_exit;
     }
 
-    int count = snprintf(buffer, buffer_size, "%s/%04ld.png", image_dir->name, image_dir->load_current);
+    int count = snprintf(buffer, buffer_size, "%s/%04ld.png", image_dir->input_dir_name, image_dir->load_current);
     if (count >= buffer_size - 1) {
         LOG_ERROR("buffer too small");
         goto fail_exit;
@@ -311,7 +311,7 @@ image_t* image_dir_load_next(image_dir_t* image_dir) {
 
     if (access(buffer, F_OK) < 0) {
         if (image_dir->load_current == 0) {
-            LOG_ERROR("no image found in directory `%s`", image_dir->name);
+            LOG_ERROR("no image found in directory `%s`", image_dir->input_dir_name);
         }
         goto fail_exit;
     }
@@ -333,7 +333,8 @@ int image_dir_save(image_dir_t* image_dir, image_t* image) {
     const size_t buffer_size = 256;
     char buffer[buffer_size];
 
-    int count = snprintf(buffer, buffer_size, "%s/%s-%04ld.png", image_dir->name, image_dir->save_prefix, image->id);
+    int count =
+        snprintf(buffer, buffer_size, "%s/%s-%04ld.png", image_dir->output_dir_name, image_dir->save_prefix, image->id);
     if (count >= buffer_size - 1) {
         LOG_ERROR("buffer too small");
         goto fail_exit;
@@ -347,4 +348,12 @@ int image_dir_save(image_dir_t* image_dir, image_t* image) {
 
 fail_exit:
     return -1;
+}
+
+void image_dir_reset(image_dir_t* image_dir, const char* input_dir_name, const char* output_dir_name,
+                     const char* save_prefix) {
+    image_dir->input_dir_name  = input_dir_name;
+    image_dir->output_dir_name = output_dir_name;
+    image_dir->save_prefix     = save_prefix;
+    image_dir->load_current    = 0;
 }

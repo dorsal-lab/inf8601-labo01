@@ -382,7 +382,7 @@ image_t* filter_horizontal_flip(image_t* image) {
     for (int j = 0; j < image->height; j++) {
         for (int i = 0; i < image->width; i++) {
             pixel_t* pixel     = image_get_pixel(image, i, j);
-            pixel_t* new_pixel = image_get_pixel(new_image, (image->width-1)-i, j);
+            pixel_t* new_pixel = image_get_pixel(new_image, (image->width - 1) - i, j);
 
             *new_pixel = *pixel;
         }
@@ -394,7 +394,6 @@ fail_exit:
     return NULL;
 }
 
-
 image_t* filter_vertical_flip(image_t* image) {
     image_t* new_image = image_create(image->id, image->width, image->height);
     if (new_image == NULL) {
@@ -404,7 +403,7 @@ image_t* filter_vertical_flip(image_t* image) {
     for (int j = 0; j < image->height; j++) {
         for (int i = 0; i < image->width; i++) {
             pixel_t* pixel     = image_get_pixel(image, i, j);
-            pixel_t* new_pixel = image_get_pixel(new_image, i, (image->height-j)-1);
+            pixel_t* new_pixel = image_get_pixel(new_image, i, (image->height - j) - 1);
 
             *new_pixel = *pixel;
         }

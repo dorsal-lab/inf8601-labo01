@@ -3,8 +3,8 @@
 #include <assert.h>
 #include <stdlib.h>
 
-#include "queue.h"
 #include "log.h"
+#include "queue.h"
 
 queue_t* queue_create(size_t size) {
     queue_t* queue = calloc(sizeof(*queue), 1);
