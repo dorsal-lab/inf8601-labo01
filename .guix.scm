@@ -2,11 +2,12 @@
  (list
   "bash"
   "bc"
+  "clang-runtime"
+  "clang-toolchain"
   "cmake"
   "coreutils"
   "diffutils"
   "findutils"
-  "gcc-toolchain"
   "gzip"
   "imagemagick"
   "libpng"
