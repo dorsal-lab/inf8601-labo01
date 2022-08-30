@@ -46,10 +46,29 @@ bool FilterCallback::usesLambdas() const {
 }
 
 int FilterCallback::assertVariant(unsigned int variant) const {
+    if (functor_count == 0 && lambda_count == 0) {
+        llvm::errs()
+            << "Impossible d'identifier la construction de tbb::filter_t\n";
+        return 1;
+    }
+
+    auto variant_requires_lambdas = requires_lambdas.contains(variant);
+
     // Checks that it both expects lambdas and uses them, or neither
-    if (requires_lambdas.contains(variant) == usesLambdas()) {
+    if (variant_requires_lambdas == usesLambdas()) {
         return 0;
     }
+
+    if (variant_requires_lambdas) {
+        llvm::errs() << "Votre énoncé requiert l'utilisation de lambdas, mais "
+                        "votre code n'en utilise pas";
+    } else {
+        llvm::errs() << "Votre énoncé requiert l'utilisation de classes, mais "
+                        "votre code utilise des lambdas";
+    }
+
+    llvm::errs() << ". (" << lambda_count << " lambdas, " << functor_count
+                 << " fonctors)\n";
 
     return -1;
 }
@@ -59,23 +78,23 @@ void FilterCallback::run(
     if (const auto* match =
             result.Nodes.getNodeAs<CXXConstructExpr>("filterLambda")) {
 
+#ifdef DEBUG
         if (const auto* decl_ref = result.Nodes.getNodeAs<Decl>("decl")) {
-            decl_ref->dump();
+            // decl_ref->dump();
         }
-
         llvm::errs() << "LAMBDA : ";
         match->dump();
+#endif
+
         ++lambda_count;
-    }
-
-    if (const auto* match =
-            result.Nodes.getNodeAs<CXXConstructExpr>("filterFunctor")) {
-
+    } else if (const auto* match =
+                   result.Nodes.getNodeAs<CXXConstructExpr>("filterFunctor")) {
+#ifdef DEBUG
         llvm::errs() << "FUNCTOR : ";
         match->dump();
+#endif
         ++functor_count;
+    } else {
+        llvm::errs() << "Match non reconnu, contactez votre chargé de lab\n";
     }
-
-    llvm::errs() << '\n';
 }
-
