@@ -33,6 +33,7 @@ target_sources(pipeline-notbb PUBLIC
 # For macros with __FILE__
 target_compile_options(pipeline-notbb PUBLIC "-fmacro-prefix-map=${CMAKE_SOURCE_DIR}/=")
 
+if (DEFINED CLANG_INCLUDE_DIR)
 add_executable(source-checker
     matcher/main.cpp
     matcher/matchers.cpp
@@ -56,6 +57,7 @@ target_link_libraries(source-checker
     LLVMSupport
     LLVMFrontendOpenMP
 )
+endif()
 
 add_custom_target(format
     COMMAND clang-format -i `find source -type f -iname '*.c'` `find include -type f -iname '*.h'`
