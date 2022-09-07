@@ -39,6 +39,7 @@ int main(int argc, const char** argv) {
 
     finder.addMatcher(filterWithLambdaMatcher, &filterChecker);
     finder.addMatcher(filterWithFunctorMatcher, &filterChecker);
+    finder.addMatcher(filterInherits, &filterChecker);
 
     auto ret =
         tool.run(clang::tooling::newFrontendActionFactory(&finder).get());

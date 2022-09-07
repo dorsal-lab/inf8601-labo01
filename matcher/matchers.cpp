@@ -39,6 +39,9 @@ clang::ast_matchers::StatementMatcher filterWithFunctorMatcher =
                    .bind("expr"))) // declRefExpr(to(cxxRecordDecl()))
         .bind("filterFunctor");
 
+clang::ast_matchers::DeclarationMatcher filterInherits =
+    cxxRecordDecl(isDerivedFrom("tbb::filter")).bind("filterInherits");
+
 // FilterCallback
 
 bool FilterCallback::usesLambdas() const {
@@ -91,6 +94,16 @@ void FilterCallback::run(
                    result.Nodes.getNodeAs<CXXConstructExpr>("filterFunctor")) {
 #ifdef DEBUG
         llvm::errs() << "FUNCTOR : ";
+        match->dump();
+#endif
+        ++functor_count;
+    } else if (const auto* match =
+                   result.Nodes.getNodeAs<CXXRecordDecl>("filterInherits")) {
+#ifdef DEBUG
+        if (const auto* decl_ref = result.Nodes.getNodeAs<Decl>("decl")) {
+            // decl_ref->dump();
+        }
+        llvm::errs() << "LAMBDA : ";
         match->dump();
 #endif
         ++functor_count;
