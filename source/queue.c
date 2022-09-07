@@ -94,15 +94,15 @@ int queue_push(queue_t* queue, void* ptr) {
         queue->head = node;
     }
 
-    errno = pthread_mutex_unlock(&queue->mutex);
+    errno = pthread_cond_broadcast(&queue->modified_item_pushed);
     if (errno != 0) {
-        LOG_ERROR_ERRNO("pthread_mutex_lock");
+        LOG_ERROR_ERRNO("pthread_cond_signal");
         goto fail_exit;
     }
 
-    errno = pthread_cond_signal(&queue->modified_item_pushed);
+    errno = pthread_mutex_unlock(&queue->mutex);
     if (errno != 0) {
-        LOG_ERROR_ERRNO("pthread_cond_signal");
+        LOG_ERROR_ERRNO("pthread_mutex_lock");
         goto fail_exit;
     }
 
@@ -142,15 +142,15 @@ void* queue_pop(queue_t* queue) {
         queue->head = NULL;
     }
 
-    errno = pthread_mutex_unlock(&queue->mutex);
+    errno = pthread_cond_broadcast(&queue->modified_item_poped);
     if (errno != 0) {
-        LOG_ERROR_ERRNO("pthread_mutex_lock");
+        LOG_ERROR_ERRNO("pthread_cond_signal");
         goto fail_exit;
     }
 
-    errno = pthread_cond_signal(&queue->modified_item_poped);
+    errno = pthread_mutex_unlock(&queue->mutex);
     if (errno != 0) {
-        LOG_ERROR_ERRNO("pthread_cond_signal");
+        LOG_ERROR_ERRNO("pthread_mutex_lock");
         goto fail_exit;
     }
 
