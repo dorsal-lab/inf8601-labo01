@@ -10,6 +10,7 @@
 #include "clang/ASTMatchers/ASTMatchers.h"
 
 extern clang::ast_matchers::StatementMatcher filterWithLambdaMatcher;
+extern clang::ast_matchers::StatementMatcher lambdaMatcher;
 extern clang::ast_matchers::StatementMatcher filterWithFunctorMatcher;
 extern clang::ast_matchers::DeclarationMatcher filterInherits;
 

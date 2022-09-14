@@ -17,15 +17,18 @@ std::set<unsigned int> requires_lambdas = {2u, 4u, 5u, 8u, 9u};
 
 // AST matchers
 
+clang::ast_matchers::StatementMatcher lambdaMatcher =
+    expr(anyOf(declRefExpr(
+                   to(varDecl(hasInitializer(lambdaExpr())).bind("decl"))),
+               lambdaExpr()),
+         hasAncestor(functionDecl(hasName("pipeline_tbb"))))
+        .bind("lambda");
+
 clang::ast_matchers::StatementMatcher filterWithLambdaMatcher =
     cxxConstructExpr(
         hasDeclaration(namedDecl(hasName("filter_t"))),
-        hasArgument(
-            1,
-            expr(anyOf(declRefExpr(to(
-                           varDecl(hasInitializer(lambdaExpr())).bind("decl"))),
-                       lambdaExpr()))
-                .bind("expr"))) // declRefExpr(to(cxxRecordDecl()))
+        hasArgument(1,
+                    lambdaMatcher)) // declRefExpr(to(cxxRecordDecl()))
         .bind("filterLambda");
 
 clang::ast_matchers::StatementMatcher filterWithFunctorMatcher =
@@ -40,7 +43,10 @@ clang::ast_matchers::StatementMatcher filterWithFunctorMatcher =
         .bind("filterFunctor");
 
 clang::ast_matchers::DeclarationMatcher filterInherits =
-    cxxRecordDecl(isDerivedFrom("tbb::filter")).bind("filterInherits");
+    cxxRecordDecl(isDerivedFrom("tbb::filter"),
+                  unless(anyOf(hasName("concrete_filter"),
+                               hasName("thread_bound_filter"))))
+        .bind("filterInherits");
 
 // FilterCallback
 
@@ -82,13 +88,19 @@ void FilterCallback::run(
             result.Nodes.getNodeAs<CXXConstructExpr>("filterLambda")) {
 
 #ifdef DEBUG
-        if (const auto* decl_ref = result.Nodes.getNodeAs<Decl>("decl")) {
+        if (const auto* decl_ref = result.Nodes.getNodeAs<Decl>("lambda")) {
             // decl_ref->dump();
         }
         llvm::errs() << "LAMBDA : ";
         match->dump();
 #endif
 
+        ++lambda_count;
+    } else if (const auto* match = result.Nodes.getNodeAs<Expr>("lambda")) {
+#ifdef DEBUG
+        llvm::errs() << "ORPHAN LAMBDA : ";
+        match->dump();
+#endif
         ++lambda_count;
     } else if (const auto* match =
                    result.Nodes.getNodeAs<CXXConstructExpr>("filterFunctor")) {
@@ -103,7 +115,7 @@ void FilterCallback::run(
         if (const auto* decl_ref = result.Nodes.getNodeAs<Decl>("decl")) {
             // decl_ref->dump();
         }
-        llvm::errs() << "LAMBDA : ";
+        llvm::errs() << "FUNCTOR : ";
         match->dump();
 #endif
         ++functor_count;

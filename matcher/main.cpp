@@ -4,6 +4,7 @@
  * \author Sébastien Darche <sebastien.darche@polymtl.ca>
  */
 
+
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "clang/Tooling/CommonOptionsParser.h"
 #include "clang/Tooling/Tooling.h"
@@ -38,6 +39,7 @@ int main(int argc, const char** argv) {
     FilterCallback filterChecker;
 
     finder.addMatcher(filterWithLambdaMatcher, &filterChecker);
+    finder.addMatcher(lambdaMatcher, &filterChecker);
     finder.addMatcher(filterWithFunctorMatcher, &filterChecker);
     finder.addMatcher(filterInherits, &filterChecker);
 
