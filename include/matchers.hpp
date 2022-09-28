@@ -13,6 +13,7 @@ extern clang::ast_matchers::StatementMatcher filterWithLambdaMatcher;
 extern clang::ast_matchers::StatementMatcher lambdaMatcher;
 extern clang::ast_matchers::StatementMatcher filterWithFunctorMatcher;
 extern clang::ast_matchers::DeclarationMatcher filterInherits;
+extern clang::ast_matchers::DeclarationMatcher functorDeclaration;
 
 class FilterCallback : public clang::ast_matchers::MatchFinder::MatchCallback {
   public:

@@ -48,6 +48,11 @@ clang::ast_matchers::DeclarationMatcher filterInherits =
                                hasName("thread_bound_filter"))))
         .bind("filterInherits");
 
+clang::ast_matchers::DeclarationMatcher functorDeclaration =
+    cxxRecordDecl(hasMethod(hasOverloadedOperatorName("()")),
+                  unless(isLambda()))
+        .bind("functorDeclaration");
+
 // FilterCallback
 
 bool FilterCallback::usesLambdas() const {
@@ -112,13 +117,20 @@ void FilterCallback::run(
     } else if (const auto* match =
                    result.Nodes.getNodeAs<CXXRecordDecl>("filterInherits")) {
 #ifdef DEBUG
-        if (const auto* decl_ref = result.Nodes.getNodeAs<Decl>("decl")) {
-            // decl_ref->dump();
-        }
         llvm::errs() << "FUNCTOR : ";
         match->dump();
 #endif
         ++functor_count;
+    } else if (const auto* match = result.Nodes.getNodeAs<CXXRecordDecl>(
+                   "functorDeclaration")) {
+        if (result.Context->getSourceManager().isInMainFile(
+                match->getBeginLoc())) {
+#ifdef DEBUG
+            llvm::errs() << "FUNCTOR : ";
+            match->dump();
+#endif
+            ++functor_count;
+        }
     } else {
         llvm::errs() << "Match non reconnu, contactez votre chargé de lab\n";
     }
